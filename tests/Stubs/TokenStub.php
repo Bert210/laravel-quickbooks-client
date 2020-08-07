@@ -24,7 +24,7 @@ class TokenStub extends Token
 
     public $refresh_token_expires_at = null;
 
-    public $user = null;
+    public $model = null;
 
     public function belongsTo($related, $foreignKey = null, $ownerKey = null, $relation = null)
     {

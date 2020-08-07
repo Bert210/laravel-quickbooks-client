@@ -16,7 +16,7 @@ class CreateQuickBooksTokensTable extends Migration
     {
         Schema::create('quickbooks_tokens', function (Blueprint $table) {
             $user_id_type = DB::getSchemaBuilder()
-                              ->getColumnType('users', 'id') === 'bigint' ? 'unsignedBigInteger' : 'unsignedInteger';
+                              ->getColumnType(config('quickbooks.model.keys.table'), config('quickbooks.model.keys.table')) === 'bigint' ? 'unsignedBigInteger' : 'unsignedInteger';
 
             $table->bigIncrements('id');
             $table->{$user_id_type}('user_id');
@@ -28,9 +28,9 @@ class CreateQuickBooksTokensTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
+            $table->foreign(config('quickbooks.model.keys.foreign'))
+                  ->references(config('quickbooks.model.keys.owner'))
+                  ->on(config('quickbooks.model.keys.table'))
                   ->onDelete('cascade');
         });
     }

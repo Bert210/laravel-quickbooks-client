@@ -30,6 +30,7 @@ abstract class TestCase extends PHPUnitTestCase
      */
     protected function mockArrayIterator(MockInterface $mock, array $items)
     {
+        dd("in here");
         if ($mock instanceof ArrayAccess) {
             foreach ($items as $key => $val) {
                 $mock->shouldReceive('offsetGet')

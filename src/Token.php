@@ -2,7 +2,6 @@
 
 namespace Spinen\QuickBooks;
 
-use App\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +22,7 @@ use QuickBooksOnline\API\Exception\SdkException;
  * @property string $access_token The access token
  * @property string $realm_id Realm Id from the OAuth token
  * @property string $refresh_token The refresh token
- * @property User $user
+ * @property Model $model
  */
 class Token extends Model
 {
@@ -36,8 +35,7 @@ class Token extends Model
 
     /**
      * The attributes that should be mutated to dates.
-     *
-     * @var array
+      @var array
      */
     protected $dates = [
         'access_token_expires_at',
@@ -55,8 +53,12 @@ class Token extends Model
         'realm_id',
         'refresh_token',
         'refresh_token_expires_at',
-        'user_id',
     ];
+
+    public function __construct()
+    {
+        $this->fillable[] = config('quickbooks.model.keys.foreign');
+    }
 
     /**
      * Check if access token is valid
@@ -109,29 +111,29 @@ class Token extends Model
     /**
      * Remove the token
      *
-     * When a token is deleted, we still need a token for the client for the user.
+     * When a token is deleted, we still need a token for the client for the model.
      *
      * @return Token
      * @throws Exception
      */
     public function remove()
     {
-        $user = $this->user;
+        $model = $this->model;
 
         $this->delete();
 
-        return $user->quickBooksToken()
+        return $model->quickBooksToken()
                     ->make();
     }
 
     /**
-     * Belongs to user.
+     * Belongs to model.
      *
      * @return BelongsTo
      */
-    public function user()
+    public function model()
     {
-        $config = config('quickbooks.user');
+        $config = config('quickbooks.model');
 
         return $this->belongsTo($config['model'], $config['keys']['foreign'], $config['keys']['owner']);
     }

@@ -167,7 +167,7 @@ class TokenTest extends TestCase
      */
     public function it_allows_itself_to_be_deleted_and_returns_new_token()
     {
-        $this->token->user = Mockery::mock(User::class);
+        $this->token->model = Mockery::mock(User::class);
 
         $token_mock = Mockery::mock(Token::class);
 
@@ -176,12 +176,12 @@ class TokenTest extends TestCase
                    ->withNoArgs()
                    ->andReturnSelf();
 
-        $this->token->user->shouldReceive('quickBooksToken')
+        $this->token->model->shouldReceive('quickBooksToken')
                           ->once()
                           ->withNoArgs()
                           ->andReturn($token_mock);
 
-        $this->token->user->id = 1;
+        $this->token->model->id = 1;
 
         $this->assertEquals($token_mock, $this->token->remove());
     }
@@ -191,17 +191,33 @@ class TokenTest extends TestCase
      */
     public function it_get_related_user_model_from_configuration()
     {
-        $this->assertEquals('App\User,user_id,id', $this->token->user());
+        $this->assertEquals('Spinen\QuickBooks\Stubs\User,user_id,id', $this->token->model());
     }
 }
 
 function config($key)
 {
-    return [
-        'keys'  => [
-            'foreign' => 'user_id',
-            'owner'   => 'id',
+    $config =  [
+        'quickbooks' => [
+            'model' => [
+                'keys'  => [
+                    'table' => 'users',
+                    'foreign' => 'user_id',
+                    'owner'   => 'id',
+                ],
+                'model' => \Spinen\QuickBooks\Stubs\User::class,
+            ],
         ],
-        'model' => 'App\User',
     ];
+
+    return getArrayByPath($config, $key);
+}
+
+function getArrayByPath(&$arr, $path, $separator='.') {
+    $keys = explode($separator, $path);
+
+    foreach ($keys as $key) {
+        $arr = &$arr[$key];
+    }
+    return $arr;
 }
