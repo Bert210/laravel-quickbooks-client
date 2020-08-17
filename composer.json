@@ -1,19 +1,12 @@
 {
-    "name": "spinen/laravel-quickbooks-client",
-    "description": "SPINEN's Laravel Client for QuickBooks.",
+    "name": "bert210/laravel-quickbooks-client",
+    "description": "Bert210 fork of Spinen's Laravel Client for QuickBooks.",
     "keywords": [
         "quickbooks",
         "client",
-        "laravel",
-        "spinen"
+        "laravel"
     ],
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Jimmy Puckett",
-            "email": "jimmy.puckett@spinen.com"
-        }
-    ],
     "require": {
         "php": ">=7.2",
         "illuminate/database": "~5.5|~6|~7",
